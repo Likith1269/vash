@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Vash Laundry Service</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<img src="laundry-bg.png"
+style="
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+object-fit:cover;
+z-index:-1;
+opacity:0.75;
+">
+<div class="container">
+     <button class="menu-top-btn"
+        onclick="toggleMenu()">
+        ☰ Menu
+    </button>
+
+<img src="vash-logo.png/vash-logo.png" class="vash-logo clean-logo">
+    <div class="header-section">
+
+    <h3 id="welcomeUser"></h3>
+
+   
+
+</div>
+
+<div id="menuBox"
+style="
+display:none;
+position:absolute;
+right:20px;
+top:120px;
+background:white;
+padding:10px;
+border:1px solid #ccc;
+border-radius:10px;
+box-shadow:0 0 10px rgba(0,0,0,0.2);
+z-index:999;
+">
+</div>
+
+
+
+    <h2>Laundry Pickup & Delivery Service</h2>
+
+    <p class="tagline">We Pick. We Deliver.</p>
+
+    <!-- BOOKING FORM -->
+    <div class="booking-card">
+
+        <h3>Book Your Pickup</h3>
+
+        <form onsubmit="showMessage(event)">
+
+<div id="customerInfo"></div>            
+<h3>Select Service</h3>
+
+<select id="service" onchange="loadServiceItems()">   
+     <option>Wash & Fold</option>
+     <option>Wash & Iron</option>
+    <option>Iron Only</option>
+    <option>Dry Clean</option>
+</select>
+<h3>Select Clothes</h3>
+
+<div id="itemContainer" class="item-grid"></div>
+
+
+
+</div>
+
+
+
+
+<textarea id="notes" placeholder="Special Instructions"></textarea>
+
+<br><br>
+
+<div class="booking-card">
+
+    <h3>Estimated Total</h3>
+
+    <h2 id="totalDisplay">₹0</h2>
+
+</div>
+            <button type="submit">
+                Submit Booking
+            </button>
+
+        </form>
+
+    </div>
+
+    <!-- MY ORDERS -->
+    <h2>My Orders</h2>
+    <div id="currentOrder"></div>
+
+<div id="orderHistory" style="display:none;"></div>
+
+
+
+    <button class="logout-btn" onclick="logoutUser()">
+        Logout
+    </button>
+
+</div>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="firebase.js"></script>
+
+<script>
+
+    let bookings =
+    JSON.parse(localStorage.getItem("vashBookings")) || [];
+
+let userName =
+    localStorage.getItem("loggedInUser");
+
+let userData =
+    JSON.parse(
+        localStorage.getItem(
+            localStorage.getItem("loggedInPhone")
+        )
+    );
+
+
+// ---------- CREATE BOOKING ----------
+const serviceMenus = {
+
+    "Wash & Fold": [
+
+    { id: "shirt", name: "Shirt", price: 30 },
+    { id: "tshirt", name: "T-Shirt", price: 30 },
+    { id: "kurti", name: "Kurti Short/Medium", price: 30 },
+
+    { id: "longKurti", name: "Long Kurti", price: 45 },
+
+    { id: "trackPant", name: "Track Pant", price: 30 },
+    { id: "shorts", name: "Shorts", price: 30 },
+    { id: "leggings", name: "Leggings", price: 30 },
+
+    { id: "jeans", name: "Jeans", price: 50 },
+    { id: "formalPants", name: "Formal Pants", price: 55 },
+
+    { id: "sweatshirt", name: "Sweatshirt", price: 40 },
+    { id: "hoodie", name: "Hoodie", price: 50 }
+
+],
+    "Wash & Iron": [
+
+    { id: "shirt", name: "Shirt", price: 40 },
+    { id: "tshirt", name: "T-Shirt", price: 40 },
+    { id: "kurti", name: "Kurti Short/Medium", price: 40 },
+
+    { id: "longKurti", name: "Long Kurti", price: 55 },
+
+    { id: "trackPant", name: "Track Pant", price: 40 },
+    { id: "shorts", name: "Shorts", price: 40 },
+    { id: "leggings", name: "Leggings", price: 40 },
+
+    { id: "jeans", name: "Jeans", price: 60 },
+    { id: "formalPants", name: "Formal Pants", price: 65 },
+
+    { id: "sweatshirt", name: "Sweatshirt", price: 50 },
+    { id: "hoodie", name: "Hoodie", price: 60 }
+
+],
+
+   "Iron Only": [
+
+    { id: "shirt", name: "Shirt", price: 15 },
+    { id: "tshirt", name: "T-Shirt", price: 15 },
+    { id: "kurti", name: "Kurti", price: 15 },
+
+    { id: "longKurti", name: "Long Kurti", price: 15 },
+
+    { id: "trackPant", name: "Track Pant", price: 15 },
+    { id: "shorts", name: "Shorts", price: 15 },
+    { id: "leggings", name: "Leggings", price: 15 },
+
+    { id: "jeans", name: "Jeans", price: 15 },
+    { id: "formalPants", name: "Formal Pants", price: 15 },
+
+    { id: "sweatshirt", name: "Sweatshirt", price: 15 },
+    { id: "hoodie", name: "Hoodie", price: 15 }
+
+],
+
+   "Dry Clean": [
+
+    { id: "hoodie", name: "Hoodie", price: 180 },
+    { id: "jacket", name: "Jacket", price: 220 },
+    { id: "blanket", name: "Blanket", price: 250 }
+
+]
+
+};
+function getItemEmoji(itemId) {
+
+    const emojis = {
+        shirt: "👔",
+        tshirt: "👕",
+        kurti: "👗",
+        longKurti: "🥻",
+        trackPant: "👖",
+        shorts: "🩳",
+        leggings: "👖",
+        jeans: "👖",
+        formalPants: "👔",
+        sweatshirt: "🧥",
+        hoodie: "🧥",
+        jacket: "🧥",
+        blanket: "🛏️"
+    };
+
+    return emojis[itemId] || "👕";
+}
+function loadServiceItems() {
+
+    let service =
+        document.getElementById("service").value;
+
+    let items =
+        serviceMenus[service];
+
+    let container =
+        document.getElementById("itemContainer");
+
+    container.innerHTML = "";
+
+    items.forEach(item => {
+
+        container.innerHTML += `
+            <div class="item-card">
+
+<h4>${getItemEmoji(item.id)} ${item.name}</h4>
+                <p>₹${item.price}</p>
+
+                <button type="button"
+                onclick="changeQty('${item.id}', -1)">
+                -
+                </button>
+
+                <span id="${item.id}">
+                    0
+                </span>
+
+                <button type="button"
+                onclick="changeQty('${item.id}', 1)">
+                +
+                </button>
+
+            </div>
+        `;
+
+    });
+
+}
+function changeQty(itemId, change) {
+
+    let qty =
+        parseInt(document.getElementById(itemId).innerText);
+
+    qty = qty + change;
+
+    if (qty < 0) {
+        qty = 0;
+    }
+
+    document.getElementById(itemId).innerText = qty;
+
+    calculateTotal();
+
+}
+function calculateTotal() {
+
+    let deliveryCharge = 40;
+    let total = 0;
+
+    let service =
+        document.getElementById("service").value;
+
+    let items =
+        serviceMenus[service];
+
+    items.forEach(item => {
+
+        let qtyElement =
+            document.getElementById(item.id);
+
+        if (qtyElement) {
+
+            let qty =
+                parseInt(qtyElement.innerText);
+
+            total += qty * item.price;
+
+        }
+
+    });
+
+    total = total + deliveryCharge;
+
+    document.getElementById("totalDisplay").innerText =
+        "₹" + total + " including ₹40 delivery";
+
+    return total;
+}
+function getSelectedItems() {
+
+    let service =
+        document.getElementById("service").value;
+
+    let items =
+        serviceMenus[service];
+
+    let selected = {};
+
+    items.forEach(item => {
+
+        let qtyElement =
+            document.getElementById(item.id);
+
+        if (qtyElement) {
+
+            selected[item.id] = {
+                name: item.name,
+                price: item.price,
+                qty: parseInt(qtyElement.innerText)
+            };
+
+        }
+
+    });
+
+    return selected;
+}
+function showMessage(event) {
+
+    event.preventDefault();
+
+    let selectedItems = getSelectedItems();
+    let finalAmount = calculateTotal();
+
+    let booking = {
+        bookingId: "VASH" + Date.now(),
+        name: userData.name,
+        phone: userData.phone,
+        address: userData.address,
+        pincode: userData.pincode,
+        mapsLink: userData.mapsLink || localStorage.getItem("currentLocation") || "",
+        service: document.getElementById("service").value,
+        notes: document.getElementById("notes").value,
+        deliveryCharge: 40,
+        totalAmount: finalAmount,
+        items: selectedItems,
+        status: "Pending",
+        timestamp: Date.now(),
+        date: new Date().toISOString().split("T")[0],
+        time: new Date().toLocaleTimeString()
+    };
+
+    bookings.unshift(booking);
+
+    localStorage.setItem(
+        "vashBookings",
+        JSON.stringify(bookings)
+    );
+
+    db.collection("bookings")
+        .doc(booking.bookingId)
+        .set(booking)
+        .then(() => {
+
+            alert("Booking Confirmed: " + booking.bookingId);
+
+            document.querySelector("form").reset();
+
+            loadServiceItems();
+            calculateTotal();
+            loadOrders();
+
+        })
+        .catch((error) => {
+            alert("Firebase Error: " + error.message);
+        });
+
+}
+
+    
+
+// ---------- LOAD MY ORDERS ----------
+function loadOrders() {
+
+    let container = document.getElementById("orderHistory");
+    container.innerHTML = "";
+
+    bookings = JSON.parse(localStorage.getItem("vashBookings")) || [];
+
+bookings
+    .sort((a, b) => b.bookingId.localeCompare(a.bookingId))
+    .forEach((b, index) => {
+        container.innerHTML += `
+            <div class="card" onclick="openOrder(${index})">
+                <h4>${b.bookingId}</h4>
+                <p><b>Service:</b> ${b.service}</p>
+                <p><b>Status:</b> ${b.status}</p>
+                <p><b>Date:</b> ${b.date}</p>
+            </div>
+        `;
+    });
+}
+
+// ---------- OPEN ORDER DETAILS ----------
+function openOrder(index) {
+
+    let b = bookings[index];
+
+    let actionButton = "";
+
+   if (b.status === "Pending") {
+
+    actionButton =
+        `<button onclick="cancelOrder(${index})">
+            Cancel Order
+        </button>`;
+
+}
+
+    alert(
+        "Booking ID: " + b.bookingId + "\n" +
+        "Service: " + b.service + "\n" +
+        "Status: " + b.status + "\n" +
+        "Date: " + b.date
+    );
+
+    document.getElementById("orderHistory").innerHTML += actionButton;
+}
+
+// ---------- CANCEL ORDER ----------
+function cancelOrder(index) {
+
+    if (confirm("Cancel this booking?")) {
+
+        bookings[index].status = "Cancelled";
+
+        localStorage.setItem(
+            "vashBookings",
+            JSON.stringify(bookings)
+        );
+        
+        alert("Booking Cancelled");
+
+        showHistory();
+        loadOrders();
+
+    }
+
+}
+function resetMenuContent() {
+
+    let menu =
+        document.getElementById("menuBox");
+
+   menu.innerHTML = `
+    <button onclick="showHistory()">
+        📦 Order History
+    </button>
+
+    <br><br>
+
+    <button onclick="showProfile()">
+        👤 My Profile
+    </button>
+
+    <br><br>
+
+    <button onclick="openWhatsApp()"
+    style="background-color:#25D366; color:white;">
+        💬 WhatsApp Support
+    </button>
+
+    <br><br>
+
+    <button onclick="logoutUser()">
+        🚪 Logout
+    </button>
+`;
+
+}
+function resetMenuContent() {
+
+    let menu = document.getElementById("menuBox");
+
+    menu.innerHTML = `
+        <button onclick="showHistory()">📦 Order History</button>
+        <br><br>
+
+        <button onclick="showProfile()">👤 My Profile</button>
+        <br><br>
+
+        <button onclick="openWhatsApp()"
+        style="background-color:#25D366;color:white;">
+            💬 WhatsApp Support
+        </button>
+        <br><br>
+
+        <button onclick="logoutUser()">
+            🚪 Logout
+        </button>
+    `;
+}
+function toggleMenu() {
+
+    let menu =
+        document.getElementById("menuBox");
+
+    if (menu.style.display === "block") {
+
+        menu.style.display = "none";
+        resetMenuContent();
+
+    } else {
+
+        resetMenuContent();
+        menu.style.display = "block";
+
+    }
+
+}
+function formatItems(items) {
+
+    let output = "";
+
+    for (let key in items) {
+
+        if (items[key].qty > 0) {
+
+            output +=
+                items[key].name +
+                " × " +
+                items[key].qty +
+                "<br>";
+
+        }
+
+    }
+
+    return output;
+}
+document.addEventListener("click", function(event) {
+
+    let menu = document.getElementById("menuBox");
+    let menuButton = document.querySelector(".menu-top-btn");
+
+    if (
+        menu.style.display === "block" &&
+        !menu.contains(event.target) &&
+        !menuButton.contains(event.target)
+    ) {
+
+        menu.style.display = "none";
+        resetMenuContent();
+    }
+
+});
+function showHistory() {
+
+    let menu =
+        document.getElementById("menuBox");
+
+    bookings =
+        JSON.parse(localStorage.getItem("vashBookings")) || [];
+
+    menu.innerHTML = "<h3>Order History</h3>";
+
+    bookings.forEach((b, index) => {
+
+        let cancelButton = "";
+
+
+        if (b.status === "Pending") {
+            cancelButton =
+                `<button onclick="cancelOrder(${index})">
+                    Cancel Order
+                </button>`;
+        }
+
+        menu.innerHTML += `
+            <div class="card">
+                <h4>${b.bookingId}</h4>
+                <p><b>Service:</b> ${b.service}</p>
+                <p>
+    <b>🧺 Items:</b><br>
+    ${formatItems(b.items || {})}
+</p>
+
+<p>
+    <b>💰 Amount:</b>
+    ₹${b.totalAmount || 0}
+</p>
+<p><b>Status:</b> ${b.status}</p>
+
+<p style="font-size:14px;line-height:1.8;">
+
+${["Pending","Picked Up","Cleaning","Ready","Delivered"].includes(b.status) ? "🟢 Pending" : "⚪ Pending"}<br>
+
+${["Picked Up","Cleaning","Ready","Delivered"].includes(b.status) ? "🟢 Picked Up" : "⚪ Picked Up"}<br>
+
+${["Cleaning","Ready","Delivered"].includes(b.status) ? "🟢 Cleaning" : "⚪ Cleaning"}<br>
+
+${["Ready","Delivered"].includes(b.status) ? "🟢 Ready" : "⚪ Ready"}<br>
+
+${b.status === "Delivered" ? "🟢 Delivered" : "⚪ Delivered"}
+
+</p>                <p><b>Date:</b> ${b.date}</p>
+                <p><b>Time:</b> ${b.time}</p>
+                ${cancelButton}
+            </div>
+        `;
+
+    });
+
+    menu.innerHTML += `
+        <br>
+        <button onclick="closeMenu()">Close</button>
+    `;menu.onclick = function(event) {
+    event.stopPropagation();
+};
+
+}
+function closeMenu() {
+
+    let menu =
+        document.getElementById("menuBox");
+
+    menu.style.display = "none";
+    resetMenuContent();
+
+}
+function showProfile() {
+
+    let menu =
+        document.getElementById("menuBox");
+
+    menu.innerHTML = `
+        <h3>My Profile</h3>
+
+        <input type="text" id="editName" value="${userData.name}">
+        <br><br>
+
+        <input type="text" id="editPhone" value="${userData.phone}">
+        <br><br>
+
+        <input type="text" id="editPincode" value="${userData.pincode}">
+        <br><br>
+
+        <input type="text" id="editAddress" value="${userData.address}">
+        <br><br>
+
+<button onclick="updateProfileLocation()">
+    📍 Update Current Location
+</button>
+        <br><br>
+
+
+        <button onclick="saveProfile()">
+            Save Changes
+        </button>
+
+        <br><br>
+
+        <button onclick="closeMenu()">
+            Close
+        </button>
+    `;
+
+}
+function saveProfile() {
+
+    userData.name =
+        document.getElementById("editName").value;
+
+    userData.phone =
+        document.getElementById("editPhone").value;
+
+    userData.pincode =
+        document.getElementById("editPincode").value;
+
+    userData.address =
+        document.getElementById("editAddress").value;
+        userData.mapsLink =
+    userData.mapsLink ||
+    localStorage.getItem("currentLocation") ||
+    "";
+
+    localStorage.setItem(
+        userData.phone,
+        JSON.stringify(userData)
+    );
+
+    localStorage.setItem(
+        "loggedInUser",
+        userData.name
+    );
+
+    localStorage.setItem(
+        "loggedInPhone",
+        userData.phone
+    );
+
+    alert("Profile Updated Successfully");
+
+    location.reload();
+
+}
+function updateProfileLocation() {
+
+    if (navigator.geolocation) {
+
+        navigator.geolocation.getCurrentPosition(function(position) {
+
+            let latitude = position.coords.latitude;
+            let longitude = position.coords.longitude;
+
+            userData.address = latitude + ", " + longitude;
+            userData.mapsLink =
+                "https://www.google.com/maps?q=" +
+                latitude + "," + longitude;
+
+            localStorage.setItem(
+                userData.phone,
+                JSON.stringify(userData)
+            );
+
+            alert("Location Updated Successfully");
+
+            location.reload();
+
+        }, function() {
+
+            alert("Location permission denied");
+
+        });
+
+    } else {
+
+        alert("GPS not supported");
+
+    }
+
+}
+function updateProfileLocation() {
+
+    if (navigator.geolocation) {
+
+        navigator.geolocation.getCurrentPosition(
+
+            function(position) {
+
+                let latitude =
+                    position.coords.latitude;
+
+                let longitude =
+                    position.coords.longitude;
+
+                userData.address =
+                    latitude + ", " + longitude;
+
+                userData.mapsLink =
+                    "https://www.google.com/maps?q=" +
+                    latitude + "," + longitude;
+
+                localStorage.setItem(
+                    userData.phone,
+                    JSON.stringify(userData)
+                );
+
+                alert("Location Updated Successfully");
+
+                location.reload();
+
+            },
+
+            function() {
+
+                alert("Location Permission Denied");
+
+            }
+
+        );
+
+    } else {
+
+        alert("GPS Not Supported");
+
+    }
+
+}
+function openWhatsApp() {
+
+    window.open(
+        "https://wa.me/919035049001?text=Hello%20Vash%20Support",
+        "_blank"
+    );
+
+}
+
+// ---------- AUTO SYNC ----------
+setInterval(() => {
+
+    let updated =
+        JSON.parse(localStorage.getItem("vashBookings")) || [];
+        
+
+    if (JSON.stringify(updated) !== JSON.stringify(bookings)) {
+
+        bookings = updated;
+
+        loadOrders();
+    }
+
+}, 3000);
+
+// INIT
+loadServiceItems();
+loadOrders();
+
+</script>
+
+<script src="script.js"></script>
+
+</body>
+</html>

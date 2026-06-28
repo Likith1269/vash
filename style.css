@@ -1,0 +1,1216 @@
+body {
+    font-family: Arial, "Segoe UI Emoji", "Apple Color Emoji", sans-serif;
+    background: linear-gradient(135deg, #eef5ff, #ffffff);
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+.container {
+    width: 100%;
+    max-width: 2400px;
+    margin: auto;
+    padding: 30px;
+}
+h1 {
+    color: #0077ff;
+    font-size: 50px;
+    margin-bottom: 5px;
+}
+
+#welcomeUser {
+    color: #555;
+    margin-bottom: 20px;
+}
+
+h2 {
+    color: #222;
+}
+
+.tagline {
+    font-size: 22px;
+    font-weight: bold;
+    color: #0077ff;
+    margin-bottom: 30px;
+}
+
+.booking-card {
+    background: rgba(255,255,255,0.95);
+    padding: 35px;
+    border-radius: 25px;
+    box-shadow:
+        0 15px 40px rgba(0,119,255,0.12),
+        0 5px 20px rgba(0,0,0,0.08);
+    margin-bottom: 40px;
+    border: 1px solid rgba(255,255,255,0.7);
+    transition: 0.3s;
+}
+
+.booking-card:hover {
+    transform: translateY(-5px);
+}
+.booking-card {
+    overflow-x: auto;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+input,
+select,
+textarea {
+    width: 90%;
+    max-width: 400px;
+    padding: 14px;
+    margin-top: 10px;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    font-size: 15px;
+    background: white;
+    transition: all 0.3s ease;
+}
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: #0077ff;
+    box-shadow: 0 0 0 4px rgba(0,119,255,0.15);
+}
+textarea {
+    height: 100px;
+    resize: none;
+    background: rgba(255,255,255,0.95);
+    border: 2px solid #dbeafe;
+    border-radius: 16px;
+    padding: 15px;
+    font-size: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+textarea:focus {
+    border-color: #0077ff;
+    box-shadow: 0 0 15px rgba(0,119,255,0.2);
+}
+
+button {
+    background: linear-gradient(135deg, #0077ff, #005fd1);
+    color: white;
+    padding: 14px 30px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    margin-top: 15px;
+    font-size: 16px;
+    font-weight: bold;
+    box-shadow: 0 6px 15px rgba(0,119,255,0.25);
+    transition: all 0.3s ease;
+}
+
+button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0,119,255,0.35);
+}
+
+.services {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+    margin-bottom: 40px;
+}
+
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    width: 220px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+.card h4 {
+    color: #0077ff;
+}
+
+.logout-btn {
+    background-color: #ff4d4d;
+    margin-top: 30px;
+}
+
+.logout-btn:hover {
+    opacity: 0.9;
+}
+@media screen and (max-width: 768px) {
+
+    .container {
+        width: 95%;
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 40px;
+    }
+
+    h2 {
+        font-size: 24px;
+    }
+
+    .tagline {
+        font-size: 18px;
+    }
+
+    .booking-card {
+        padding: 15px;
+    }
+
+    input,
+    select,
+    textarea {
+        width: 95%;
+        max-width: 100%;
+    }
+
+    button {
+        width: auto;
+        max-width: 100%;
+    }
+
+    .card {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+}/* ===== VASH ITEM CARDS ===== */
+
+.item-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    width: 100%;
+    margin-top: 15px;
+}
+
+.item-card {
+    background: linear-gradient(145deg, #ffffff, #f8fbff);
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow:
+        0 8px 20px rgba(0,0,0,0.06),
+        0 2px 8px rgba(0,119,255,0.08);
+    text-align: center;
+    border: 1px solid #e6eeff;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+.item-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow:
+        0 15px 35px rgba(0,119,255,0.18),
+        0 8px 20px rgba(0,0,0,0.08);
+}
+
+.item-card h4 {
+    margin: 5px 0;
+    color: #0077ff;
+    font-size: 16px;
+}
+
+.item-card p {
+    margin: 8px 0;
+    font-weight: bold;
+    color: #333;
+}
+
+.item-card button {
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    margin: 5px;
+    font-size: 22px;
+    font-weight: bold;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #0077ff, #005fd1);
+    color: white;
+    border: none;
+    box-shadow: 0 6px 15px rgba(0,119,255,0.3);
+    transition: all 0.3s ease;
+}
+.item-card button:hover {
+    transform: scale(1.15) rotate(8deg);
+    box-shadow: 0 10px 20px rgba(0,119,255,0.4);
+}
+.item-card span {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0 8px;
+}
+
+@media screen and (max-width: 768px) {
+
+    .item-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .item-card {
+        padding: 10px;
+    }
+
+    .item-card h4 {
+        font-size: 14px;
+    }
+
+}
+.pending{
+    background:#fff3cd;
+    color:#856404;
+}
+
+.pickedup{
+    background:#d1ecf1;
+    color:#0c5460;
+}
+
+.cleaning{
+    background:#e2d6f5;
+    color:#5a2d82;
+}
+
+.ready{
+    background:#d4edda;
+    color:#155724;
+}
+
+.delivered{
+    background:#28a745;
+    color:white;
+}
+
+.cancelled{
+    background:#f8d7da;
+    color:#721c24;
+}
+/* Admin Table Improvements */
+
+.booking-card {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    min-width: 1400px;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 15px 12px;
+    text-align: center;
+    vertical-align: middle;
+    word-break: break-word;
+}
+
+th {
+    background: #f5f8ff;
+    font-size: 16px;
+}
+
+/* Booking ID */
+td:nth-child(1) {
+    min-width: 160px;
+}
+
+/* Customer */
+td:nth-child(2) {
+    min-width: 90px;
+}
+
+/* Phone */
+td:nth-child(3) {
+    min-width: 120px;
+}
+
+/* Service */
+td:nth-child(4) {
+    min-width: 100px;
+}
+
+/* Items */
+td:nth-child(5) {
+    min-width: 150px;
+}
+
+/* Address */
+td:nth-child(6) {
+    min-width: 180px;
+}
+
+/* Location */
+td:nth-child(7) {
+    min-width: 90px;
+}
+
+/* Date */
+td:nth-child(8) {
+    min-width: 90px;
+}
+
+/* Time */
+td:nth-child(9) {
+    min-width: 90px;
+}
+
+/* Amount */
+td:nth-child(10) {
+    min-width: 120px;
+}
+
+/* Status */
+td:nth-child(11) {
+    min-width: 110px;
+}
+
+/* Delete */
+td:nth-child(12) {
+    min-width: 110px;
+}
+
+.container {
+    width: 98%;
+    max-width: 1600px;
+    margin: 30px auto;
+    padding: 30px;
+    box-sizing: border-box;
+
+    background: rgba(255,255,255,0.70);
+    backdrop-filter: blur(10px);
+
+    border-radius: 30px;
+
+    box-shadow:
+        0 15px 40px rgba(0,0,0,0.08);
+
+}
+
+table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 8px;
+    font-size: 14px;
+    word-break: break-word;
+}
+.auth-brand .vash-logo {
+    width: 220px;
+}
+
+.header-section .vash-logo {
+    width: 160px;
+}
+
+.vash-logo:hover {
+    transform: scale(1.05);
+}
+.booking-card h3 {
+    font-size: 22px;
+    color: #111827;
+    margin-bottom: 20px;
+}
+
+.booking-card h3::after {
+    content: "";
+    display: block;
+    width: 55px;
+    height: 3px;
+    background: #b0b2b4;
+    margin: 10px auto 0;
+    border-radius: 10px;
+}
+
+.item-card h4 {
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.item-card p {
+    font-size: 15px;
+}
+#totalDisplay {
+    font-size: 40px;
+    color: #455a7b;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.booking-card:nth-of-type(2) {
+    background: linear-gradient(135deg, #eef5ff, #ffffff);
+    border: 2px solid #dbeafe;
+}
+#menuBox {
+    min-width: 220px;
+    border-radius: 18px !important;
+    padding: 18px !important;
+    background: rgba(255,255,255,0.98) !important;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.15) !important;
+}
+
+#menuBox button {
+    width: 100%;
+    margin-top: 10px;
+    border-radius: 12px;
+    text-align: left;
+    padding: 13px 16px;
+}
+
+#menuBox h3 {
+    color: #111827;
+    margin-top: 5px;
+}
+@media screen and (max-width: 768px) {
+
+    .container {
+        padding: 15px;
+    }
+
+    .booking-card {
+        margin-bottom: 25px;
+    }
+
+    .item-grid {
+        gap: 12px;
+    }
+
+    .item-card {
+        padding: 14px;
+    }
+
+    #totalDisplay {
+        font-size: 30px;
+    }
+
+    .vash-logo {
+        max-width: 70%;
+    }
+}
+#welcomeUser {
+    font-size: 24px;
+    color: #333;
+    font-weight: 600;
+    text-align: center;
+    margin: 10px 0;
+}
+
+h2 {
+    text-align: center;
+}
+
+.tagline {
+    text-align: center;
+}
+.header-section {
+    position: relative;
+    text-align: center;
+}
+
+.menu-top-btn {
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+#menuBox .card {
+    width: auto;
+    margin: 12px 0;
+    padding: 16px;
+    border-radius: 16px;
+    text-align: left;
+    background: #f8fbff;
+    border: 1px solid #e5efff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+
+#menuBox .card h4 {
+    color: #0077ff;
+    margin-bottom: 10px;
+}
+
+#menuBox .card p {
+    margin: 7px 0;
+    font-size: 14px;
+}
+#totalDisplay {
+    letter-spacing: 0.5px;
+}
+
+.booking-card h3 {
+    text-align: center;
+}
+
+form > .booking-card {
+    width: 90%;
+    max-width: 420px;
+}
+/* PREMIUM BACKGROUND EFFECT */
+
+body {
+    background:
+        radial-gradient(circle at top left, rgba(0,119,255,0.18), transparent 35%),
+        radial-gradient(circle at top right, rgba(0,183,255,0.15), transparent 30%),
+        linear-gradient(135deg, #eef5ff, #ffffff);
+    min-height: 100vh;
+}
+
+.container {
+    background: rgba(255,255,255,0.45);
+    backdrop-filter: blur(10px);
+    border-radius: 25px;
+    margin-top: 25px;
+    margin-bottom: 25px;
+}
+.vash-logo {
+    width: 400px !important;
+    max-width: 180px !important;
+}
+#service {
+    background: white;
+    border: 2px solid #dbeafe;
+    border-radius: 14px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #374151;
+    cursor: pointer;
+}
+
+#service:hover {
+    border-color: #0077ff;
+}
+h1 {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.vash-logo {
+    width: 300px !important;
+    max-width: 500px !important;
+    display: block;
+    margin: 0 auto 15px auto;
+}
+
+#welcomeUser {
+    margin-top: 5px;
+    margin-bottom: 8px;
+}
+
+.tagline {
+    margin-top: 8px;
+    margin-bottom: 25px;
+}
+/* TOTAL CARD PREMIUM DESIGN */
+
+#totalDisplay {
+    font-size: 42px;
+    font-weight: 700;
+    color: #0077ff;
+    text-shadow: 0 2px 8px rgba(0,119,255,0.15);
+}
+
+.booking-card:nth-of-type(2) {
+    background: linear-gradient(
+        135deg,
+        #f8fbff,
+        #eef5ff
+    );
+
+    border: 2px solid #dbeafe;
+
+    box-shadow:
+        0 10px 30px rgba(0,119,255,0.08);
+
+    border-radius: 25px;
+}
+
+.booking-card:nth-of-type(2) h3 {
+    color: #374151;
+    font-size: 24px;
+}
+/* SUBMIT BOOKING BUTTON */
+
+button[type="submit"] {
+    width: 90%;
+    max-width: 420px;
+    padding: 18px;
+    font-size: 18px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #0077ff, #00a2ff);
+    box-shadow: 0 10px 25px rgba(0,119,255,0.30);
+}
+
+button[type="submit"]:hover {
+    transform: translateY(-4px) scale(1.02);
+}
+/* TOP SECTION PREMIUM DESIGN */
+
+.header-section {
+    position: relative;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.menu-top-btn {
+    position: absolute;
+    right: 10px;
+    top: 0;
+    padding: 12px 18px;
+    border-radius: 15px;
+    background: rgba(255,255,255,0.9);
+    color: #0077ff;
+    border: 2px solid #dbeafe;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+}
+
+.menu-top-btn:hover {
+    background: #0077ff;
+    color: white;
+}
+
+#welcomeUser {
+    font-size: 26px;
+    font-weight: 700;
+    color: #1f2937;
+}
+
+.tagline {
+    font-size: 20px;
+    font-weight: 600;
+    color: #6b7280;
+}
+/* SMOOTH PAGE ANIMATIONS */
+
+.container {
+    animation: fadeIn 0.8s ease;
+}
+
+.booking-card {
+    animation: slideUp 0.6s ease;
+}
+
+.item-card {
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+/* LOGIN PAGE DESIGN */
+
+.login-page {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.login-card {
+    background: rgba(255,255,255,0.95);
+    width: 90%;
+    max-width: 420px;
+    padding: 35px;
+    border-radius: 28px;
+    box-shadow:
+        0 15px 40px rgba(0,119,255,0.15),
+        0 5px 20px rgba(0,0,0,0.08);
+    text-align: center;
+    border: 1px solid rgba(255,255,255,0.8);
+}
+
+.login-logo {
+    width: 180px;
+    max-width: 80%;
+    margin-bottom: 10px;
+}
+
+.login-subtitle {
+    color: #6b7280;
+    margin-bottom: 25px;
+}
+
+.login-card input {
+    width: 90%;
+    margin-bottom: 15px;
+}
+
+.login-card button {
+    width: 90%;
+}
+
+.create-account-btn {
+    background: white;
+    color: #0077ff;
+    border: 2px solid #0077ff;
+}
+
+.create-account-btn:hover {
+    background: #0077ff;
+    color: white;
+}
+/* AUTH LOGIN / REGISTER PREMIUM BACKGROUND */
+
+.auth-body {
+    background:
+        radial-gradient(circle at left center, rgba(0,119,255,0.18), transparent 35%),
+        radial-gradient(circle at right center, rgba(0,183,255,0.22), transparent 35%),
+        linear-gradient(135deg, #eef6ff, #ffffff);
+}
+
+.auth-bg {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px;
+    position: relative;
+    overflow: hidden;
+}
+
+.auth-bg::before {
+    content: "🧺";
+    position: absolute;
+    left: 8%;
+    bottom: 16%;
+    font-size: 150px;
+    opacity: 0.18;
+}
+
+.auth-bg::after {
+    content: "🫧";
+    position: absolute;
+    right: 9%;
+    top: 22%;
+    font-size: 120px;
+    opacity: 0.20;
+}
+
+.auth-brand {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    width: 100%;
+}
+
+.auth-logo {
+    width: 360px;
+}
+
+.auth-brand p {
+    color: #1f2937;
+    font-size: 22px;
+    font-weight: 600;
+    margin: 5px 0;
+}
+
+.auth-card {
+    background: rgba(255,255,255,0.96);
+    width: 90%;
+    max-width: 430px;
+    padding: 45px 35px;
+    border-radius: 32px;
+    box-shadow:
+        0 20px 50px rgba(0,119,255,0.18),
+        0 8px 25px rgba(0,0,0,0.08);
+    text-align: center;
+    border: 1px solid rgba(255,255,255,0.8);
+    position: relative;
+    z-index: 2;
+}
+
+.auth-icon {
+    width: 85px;
+    height: 85px;
+    background: #eef5ff;
+    color: #0077ff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: -85px auto 20px;
+    font-size: 38px;
+    box-shadow: 0 8px 20px rgba(0,119,255,0.18);
+}
+
+.auth-card h2 {
+    font-size: 36px;
+    color: #111827;
+    margin-bottom: 10px;
+}
+
+.login-subtitle {
+    color: #64748b;
+    font-size: 17px;
+    margin-bottom: 25px;
+    line-height: 1.5;
+}
+
+.auth-card input {
+    width: 90%;
+    margin-bottom: 15px;
+    padding: 16px;
+    border-radius: 16px;
+}
+
+.auth-card button {
+    width: 90%;
+    padding: 17px;
+    border-radius: 16px;
+    font-size: 17px;
+}
+
+.or-line {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 22px 0;
+    color: #94a3b8;
+}
+
+.or-line::before,
+.or-line::after {
+    content: "";
+    height: 1px;
+    background: #dbeafe;
+    width: 35%;
+    margin: 0 12px;
+}
+
+.create-account-btn {
+    background: white !important;
+    color: #0077ff !important;
+    border: 2px solid #0077ff !important;
+}
+
+.create-account-btn:hover {
+    background: #0077ff !important;
+    color: white !important;
+}
+
+.safe-text {
+    margin-top: 25px;
+    color: #64748b;
+    font-size: 15px;
+}
+
+@media(max-width: 768px) {
+
+    .auth-brand {
+        position: static;
+        text-align: center;
+        margin-bottom: 35px;
+    }
+
+    .auth-bg {
+        flex-direction: column;
+        padding-top: 40px;
+    }
+
+    .auth-logo {
+        width: 170px;
+    }
+
+    .auth-brand p {
+        font-size: 18px;
+    }
+
+    .auth-card {
+        padding: 40px 20px;
+    }
+
+    .auth-card h2 {
+        font-size: 28px;
+    }
+}
+/* LAUNDRY THEME BACKGROUND */
+
+.laundry-bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.auth-bg {
+    position: relative;
+    z-index: 2;
+}
+
+.laundry-bg::before {
+    content: "";
+    position: absolute;
+    left: -120px;
+    bottom: -80px;
+    width: 420px;
+    height: 420px;
+    background: radial-gradient(circle, rgba(0,119,255,0.22), transparent 65%);
+    border-radius: 50%;
+}
+
+.laundry-bg::after {
+    content: "";
+    position: absolute;
+    right: -130px;
+    top: 120px;
+    width: 520px;
+    height: 520px;
+    background: radial-gradient(circle, rgba(0,183,255,0.25), transparent 65%);
+    border-radius: 50%;
+}
+
+.bubble {
+    position: absolute;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.9);
+    background: rgba(255,255,255,0.35);
+    box-shadow: inset 0 0 20px rgba(0,119,255,0.15);
+}
+
+.b1 {
+    width: 70px;
+    height: 70px;
+    right: 150px;
+    top: 130px;
+}
+
+.b2 {
+    width: 38px;
+    height: 38px;
+    right: 260px;
+    top: 250px;
+}
+
+.b3 {
+    width: 52px;
+    height: 52px;
+    left: 170px;
+    top: 160px;
+}
+
+.washer {
+    position: absolute;
+    left: 70px;
+    bottom: 120px;
+    font-size: 140px;
+    opacity: 0.18;
+}
+
+.towels {
+    position: absolute;
+    right: 90px;
+    bottom: 130px;
+    font-size: 130px;
+    opacity: 0.18;
+}
+
+.auth-card {
+    z-index: 3;
+}
+.auth-body {
+    background:
+        linear-gradient(rgba(238,246,255,0.75),
+        rgba(255,255,255,0.80)),
+        url("laundry-bg.png");
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+/* CUSTOMER DASHBOARD BACKGROUND */
+
+.dashboard-body {
+    background:
+        linear-gradient(rgba(238,246,255,0.85),
+        rgba(255,255,255,0.88)),
+        url("laundry-bg.png");
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+/* CUSTOMER DASHBOARD BACKGROUND */
+
+.dashboard-body {
+    background:
+        linear-gradient(rgba(238,246,255,0.85),
+        rgba(255,255,255,0.88)),
+        url("laundry-bg.png");
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+body.dashboard-body {
+    background:
+        linear-gradient(rgba(238,246,255,0.60),
+        rgba(255,255,255,0.70)),
+        url("./laundry-bg.png") !important;
+
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    background-attachment: fixed !important;
+}
+.dashboard-body .container {
+    background: rgba(255,255,255,0.55) !important;
+}
+
+
+
+
+.auth-brand .vash-logo-svg {
+    width: 240px;
+    margin-bottom: 8px;
+}
+/* RIDER / ADMIN TABLE FIX */
+
+.booking-card {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    min-width: 1200px;
+    table-layout: auto;
+    border-collapse: collapse;
+}
+
+th, td {
+    font-size: 13px;
+    padding: 10px 8px;
+}
+/* MOBILE AUTH FIX */
+
+@media screen and (max-width: 768px) {
+
+    .auth-bg {
+        padding: 25px 15px !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+    }
+
+    .auth-brand {
+        position: static !important;
+        transform: none !important;
+        width: 100% !important;
+        margin-bottom: 35px !important;
+        text-align: center !important;
+    }
+
+    .auth-brand .vash-logo,
+    .vash-logo {
+        width: 220px !important;
+        max-width: 220px !important;
+        margin: 0 auto 8px auto !important;
+    }
+
+    .auth-brand p {
+        font-size: 16px !important;
+        text-align: center !important;
+    }
+
+    .auth-card {
+        width: 92% !important;
+        max-width: 380px !important;
+        padding: 40px 20px !important;
+        margin: 0 auto !important;
+    }
+
+    .auth-card h2 {
+        font-size: 30px !important;
+    }
+}
+/* MOBILE MENU FIX */
+
+@media screen and (max-width: 768px) {
+
+    .header-section {
+        position: relative !important;
+        padding-top: 70px !important;
+    }
+
+    .menu-top-btn {
+        position: absolute !important;
+        top: 10px !important;
+        right: 10px !important;
+        z-index: 999 !important;
+
+        width: auto !important;
+        padding: 12px 18px !important;
+        margin: 0 !important;
+    }
+}
+/* MOBILE MENU BUTTON TOP RIGHT */
+
+@media screen and (max-width: 768px) {
+
+    .header-section {
+        position: relative;
+        padding-top: 60px;
+    }
+
+    .menu-top-btn {
+        position: absolute !important;
+        top: 10px !important;
+        right: 10px !important;
+        z-index: 999;
+        margin: 0 !important;
+    }
+
+    .vash-logo {
+        display: block;
+        margin: 40px auto 10px auto !important;
+    }
+}
+.vash-logo {
+    margin-bottom: -5px !important;
+}
+
+#welcomeUser {
+    margin-top: 0 !important;
+    margin-bottom: 8px !important;
+}

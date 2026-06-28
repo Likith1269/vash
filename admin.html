@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Vash Admin Panel</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="container">
+<img src="vash-logo.png/vash-logo.png" class="vash-logo">
+    <h1>VASH ADMIN</h1>
+    <h3 id="adminWelcome"></h3>
+    <button onclick="adminLogout()" style="float:right;">
+    Logout
+</button>
+
+    <h2>Booking Management Dashboard</h2>
+
+    <div class="services">
+
+        <div class="card">
+            <h3 id="totalOrders">0</h3>
+            <p>Total Orders</p>
+        </div>
+
+        <div class="card">
+            <h3 id="pendingOrders">0</h3>
+            <p>Pending</p>
+        </div>
+
+        <div class="card">
+            <h3 id="pickedOrders">0</h3>
+            <p>Picked Up</p>
+        </div>
+
+        <div class="card">
+            <h3 id="deliveredOrders">0</h3>
+            <p>Delivered</p>
+        </div>
+        <div class="card">
+            <h3 id="CancelledOrders">0</h3>
+            <p>Cancelled</p>
+        </div>
+        <div class="card">
+    <h3 id="todayOrders">0</h3>
+    <p>Today's Orders</p>
+</div>
+
+<div class="card">
+    <h3 id="weekOrders">0</h3>
+    <p>This Week</p>
+</div>
+
+<div class="card">
+    <h3 id="monthOrders">0</h3>
+    <p>This Month</p>
+</div>
+<div class="card">
+    <h3 id="todayRevenue">₹0</h3>
+    <p>Today's Revenue</p>
+</div>
+
+<div class="card">
+    <h3 id="weekRevenue">₹0</h3>
+    <p>This Week Revenue</p>
+</div>
+
+<div class="card">
+    <h3 id="monthRevenue">₹0</h3>
+    <p>This Month Revenue</p>
+</div>
+
+<div class="card">
+    <h3 id="totalRevenue">₹0</h3>
+    <p>Total Revenue</p>
+</div>
+
+    </div>
+
+    <br>
+
+    <input
+        type="text"
+        id="searchInput"
+        placeholder="Search by Booking ID, Name or Phone"
+        onkeyup="searchBookings()">
+
+    <br><br>
+
+    <select id="statusFilter" onchange="filterStatus()">
+
+        <option value="All">All Orders</option>
+        <option value="Pending">Pending</option>
+        <option value="Picked Up">Picked Up</option>
+        <option value="Cleaning">Cleaning</option>
+        <option value="Ready">Ready</option>
+        <option value="Delivered">Delivered</option>
+                <option value="Cancelled">Cancelled</option>
+
+
+    </select>
+    <br><br>
+
+<input
+    type="date"
+    id="dateFilter"
+    onchange="filterDate()">
+
+<button onclick="clearDateFilter()">
+    Clear Date
+</button>
+
+    <br><br>
+
+    <div class="booking-card">
+
+        <h3>Customer Bookings</h3>
+
+        <table border="1"> 
+
+            <thead>
+                <tr>
+                    <th>Booking ID</th>
+                    <th>Customer</th>
+                    <th>Phone</th>
+                    <th>Service</th>
+                    <th>Items</th>
+                    <th>Address</th>
+                    <th>Location</th>
+<th>Date</th>
+<th>Time</th>
+<th>Amount</th>
+<th>Status</th>
+<th>Delete</th>
+                </tr>
+            </thead>
+
+            <tbody id="bookingTable"></tbody>
+
+        </table>
+
+    </div>
+
+</div>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+<script src="firebase.js"></script>
+<script>
+
+if (localStorage.getItem("adminLoggedIn") !== "true") {
+    alert("Please Login First");
+    window.location.href = "admin-login.html";
+}
+
+let adminName = localStorage.getItem("adminName");
+document.getElementById("adminWelcome").innerText =
+    "Welcome, " + adminName + " 👋";
+
+let bookings = [];
+let table = document.getElementById("bookingTable");
+
+function formatItems(items) {
+    let output = "";
+
+    for (let key in items) {
+        if (items[key].qty > 0) {
+            output += items[key].name + " × " + items[key].qty + "<br>";
+        }
+    }
+
+    return output || "-";
+}
+
+function updateDashboard() {
+    let today = new Date().toISOString().split("T")[0];
+    let currentMonth = new Date().getMonth();
+    let currentYear = new Date().getFullYear();
+
+    let todayDate = new Date();
+    let firstDayOfWeek = new Date(todayDate);
+    firstDayOfWeek.setDate(todayDate.getDate() - todayDate.getDay());
+
+    document.getElementById("totalOrders").innerText = bookings.length;
+
+    document.getElementById("pendingOrders").innerText =
+        bookings.filter(b => b.status === "Pending").length;
+
+    document.getElementById("pickedOrders").innerText =
+        bookings.filter(b => b.status === "Picked Up").length;
+
+    document.getElementById("deliveredOrders").innerText =
+        bookings.filter(b => b.status === "Delivered").length;
+
+    document.getElementById("CancelledOrders").innerText =
+        bookings.filter(b => b.status === "Cancelled").length;
+
+    document.getElementById("todayOrders").innerText =
+        bookings.filter(b => b.date === today).length;
+
+    document.getElementById("weekOrders").innerText =
+        bookings.filter(b => new Date(b.date) >= firstDayOfWeek).length;
+
+    document.getElementById("monthOrders").innerText =
+        bookings.filter(b => {
+            let d = new Date(b.date);
+            return d.getMonth() === currentMonth &&
+                   d.getFullYear() === currentYear;
+        }).length;
+
+    let deliveredBookings =
+        bookings.filter(b => b.status === "Delivered");
+
+    let todayRevenue = 0;
+    let weekRevenue = 0;
+    let monthRevenue = 0;
+    let totalRevenue = 0;
+
+    deliveredBookings.forEach(b => {
+        let amount = b.totalAmount || 0;
+        let d = new Date(b.date);
+
+        totalRevenue += amount;
+
+        if (b.date === today) todayRevenue += amount;
+        if (d >= firstDayOfWeek) weekRevenue += amount;
+
+        if (
+            d.getMonth() === currentMonth &&
+            d.getFullYear() === currentYear
+        ) {
+            monthRevenue += amount;
+        }
+    });
+
+    document.getElementById("todayRevenue").innerText = "₹" + todayRevenue;
+    document.getElementById("weekRevenue").innerText = "₹" + weekRevenue;
+    document.getElementById("monthRevenue").innerText = "₹" + monthRevenue;
+    document.getElementById("totalRevenue").innerText = "₹" + totalRevenue;
+}
+
+function renderTable() {
+    table.innerHTML = "";
+
+    bookings
+        .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0))
+        .forEach((booking, index) => {
+
+            table.innerHTML += `
+            <tr>
+                <td>${booking.bookingId}</td>
+                <td>${booking.name}</td>
+                <td>${booking.phone}</td>
+                <td>${booking.service}</td>
+                <td>${formatItems(booking.items || {})}</td>
+                <td>${booking.address || "Not Available"}</td>
+
+                <td>
+                    <a href="${booking.mapsLink || '#'}" target="_blank">
+                        📍 Open
+                    </a>
+                </td>
+
+                <td>${booking.date || "-"}</td>
+                <td>${booking.time || "-"}</td>
+
+                <td>
+                    <input type="number"
+                    value="${booking.totalAmount || 0}"
+                    id="amount${index}"
+                    style="width:80px;">
+
+                    <button onclick="updateAmount(${index})">
+                        Save
+                    </button>
+                </td>
+
+                <td class="
+                    ${booking.status === 'Pending' ? 'pending' : ''}
+                    ${booking.status === 'Picked Up' ? 'pickedup' : ''}
+                    ${booking.status === 'Cleaning' ? 'cleaning' : ''}
+                    ${booking.status === 'Ready' ? 'ready' : ''}
+                    ${booking.status === 'Delivered' ? 'delivered' : ''}
+                    ${booking.status === 'Cancelled' ? 'cancelled' : ''}
+                ">
+                    <select onchange="saveStatus(${index}, this.value)">
+                        <option value="Pending" ${booking.status === "Pending" ? "selected" : ""}>Pending</option>
+                        <option value="Picked Up" ${booking.status === "Picked Up" ? "selected" : ""}>Picked Up</option>
+                        <option value="Cleaning" ${booking.status === "Cleaning" ? "selected" : ""}>Cleaning</option>
+                        <option value="Ready" ${booking.status === "Ready" ? "selected" : ""}>Ready</option>
+                        <option value="Delivered" ${booking.status === "Delivered" ? "selected" : ""}>Delivered</option>
+                        <option value="Cancelled" ${booking.status === "Cancelled" ? "selected" : ""}>Cancelled</option>
+                    </select>
+                </td>
+
+                <td>
+                    <button onclick="deleteBooking(${index})">
+                        Delete
+                    </button>
+                </td>
+            </tr>
+            `;
+        });
+}
+
+function loadFirebaseBookings() {
+    db.collection("bookings")
+      .onSnapshot((snapshot) => {
+
+        bookings = [];
+
+        snapshot.forEach((doc) => {
+            bookings.push(doc.data());
+        });
+
+        localStorage.setItem("vashBookings", JSON.stringify(bookings));
+
+        updateDashboard();
+        renderTable();
+
+      });
+}
+
+function saveStatus(index, value) {
+    bookings[index].status = value;
+
+    db.collection("bookings")
+      .doc(bookings[index].bookingId)
+      .update({
+          status: value
+      });
+}
+
+function updateAmount(index) {
+    let newAmount =
+        parseInt(document.getElementById("amount" + index).value) || 0;
+
+    db.collection("bookings")
+      .doc(bookings[index].bookingId)
+      .update({
+          totalAmount: newAmount
+      })
+      .then(() => {
+          alert("Amount Updated");
+      });
+}
+
+function deleteBooking(index) {
+    if (confirm("Delete this booking?")) {
+        db.collection("bookings")
+          .doc(bookings[index].bookingId)
+          .delete();
+    }
+}
+
+function searchBookings() {
+    let input =
+        document.getElementById("searchInput").value.toLowerCase();
+
+    document.querySelectorAll("#bookingTable tr").forEach(row => {
+        row.style.display =
+            row.innerText.toLowerCase().includes(input) ? "" : "none";
+    });
+}
+
+function filterStatus() {
+    let selected = document.getElementById("statusFilter").value;
+
+    document.querySelectorAll("#bookingTable tr").forEach(row => {
+        let dropdown = row.querySelector("select");
+        if (!dropdown) return;
+
+        row.style.display =
+            selected === "All" || dropdown.value === selected ? "" : "none";
+    });
+}
+
+function filterDate() {
+    let selectedDate = document.getElementById("dateFilter").value;
+
+    document.querySelectorAll("#bookingTable tr").forEach(row => {
+        let cells = row.querySelectorAll("td");
+        if (cells.length < 8) return;
+
+        let rowDate = cells[7].innerText;
+
+        row.style.display =
+            selectedDate === "" || rowDate.includes(selectedDate)
+            ? ""
+            : "none";
+    });
+}
+
+function clearDateFilter() {
+    document.getElementById("dateFilter").value = "";
+
+    document.querySelectorAll("#bookingTable tr").forEach(row => {
+        row.style.display = "";
+    });
+}
+
+function adminLogout() {
+    localStorage.removeItem("adminLoggedIn");
+    localStorage.removeItem("adminName");
+    window.location.href = "admin-login.html";
+}
+
+loadFirebaseBookings();
+</script>

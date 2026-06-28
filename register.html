@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Vash Registration</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="auth-body">
+<div class="login-page">
+
+    <div class="login-card">
+
+<img src="vash-logo.png/vash-logo.png" class="vash-logo clean-logo">
+        <h2>Create Account</h2>
+
+        <p class="login-subtitle">
+            Register to start booking your laundry pickup
+        </p>
+
+        <form id="registerForm">
+
+            <input type="text" id="fullName" placeholder="Full Name" required>
+
+            <input type="text" id="phone" placeholder="Phone Number" required>
+
+            <input type="password" id="password" placeholder="Create Password" required>
+
+            <input type="text" id="pincode" placeholder="PIN Code" required>
+
+            <input type="text" id="address" placeholder="Address" required>
+
+            <button type="button" onclick="getLocation()">
+                📍 Use Current Location
+            </button>
+
+            <button type="submit">
+                Register
+            </button>
+
+        </form>
+
+        <button class="create-account-btn"
+        onclick="window.location.href='login.html'">
+            Back to Login
+        </button>
+
+    </div>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+
+</html>
