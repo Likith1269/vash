@@ -6,8 +6,8 @@
     <link rel="stylesheet" href="style.css">
 </head>
 
-<body>
-    <div class="laundry-bg">
+<body class="rider-body">
+        <div class="laundry-bg">
     <div class="bubble b1"></div>
     <div class="bubble b2"></div>
     <div class="bubble b3"></div>
@@ -47,118 +47,98 @@
 
 </div>
 
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="firebase.js"></script>
+
 <script>
-
-let bookings =
-    JSON.parse(localStorage.getItem("vashBookings")) || [];
-
+let bookings = [];
 let table = document.getElementById("riderTable");
 
+function formatItems(items) {
+    let output = "";
+
+    for (let key in items) {
+        if (items[key].qty > 0) {
+            output += items[key].name + " × " + items[key].qty + "<br>";
+        }
+    }
+
+    return output || "-";
+}
+
+function renderRiderTable() {
+    table.innerHTML = "";
+
+    bookings
+        .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0))
+        .forEach((booking, index) => {
+
+            table.innerHTML += `
+                <tr>
+                    <td>${booking.bookingId}</td>
+                    <td>${booking.name}</td>
+                    <td>${booking.phone}</td>
+                    <td>${booking.address || "-"}</td>
+                    <td>${formatItems(booking.items || {})}</td>
+                    <td>${booking.date || "-"}</td>
+                    <td>${booking.time || "-"}</td>
+                    <td>${booking.status || "Pending"}</td>
+                    <td>₹${booking.totalAmount || 0}</td>
+
+                    <td>
+                        <a href="tel:${booking.phone}">📞 Call</a>
+                    </td>
+
+                    <td>
+                        <a href="${booking.mapsLink || '#'}" target="_blank">
+                            📍 Open Map
+                        </a>
+                    </td>
+
+                    <td>
+                        <button onclick="updateStatus(${index}, 'Picked Up')">
+                            🚚 Picked Up
+                        </button>
+
+                        <button onclick="updateStatus(${index}, 'Delivered')">
+                            📦 Delivered
+                        </button>
+                    </td>
+                </tr>
+            `;
+        });
+}
+
 function updateStatus(index, newStatus) {
-
-    bookings[index].status = newStatus;
-
-    localStorage.setItem(
-        "vashBookings",
-        JSON.stringify(bookings)
-    );
+    let booking = bookings[index];
 
     db.collection("bookings")
-      .doc(bookings[index].bookingId)
+      .doc(booking.bookingId)
       .update({
           status: newStatus
       })
       .then(() => {
-          alert("Firebase updated");
-          location.reload();
+          alert("Status Updated");
       })
       .catch((error) => {
           alert("Firebase Error: " + error.message);
       });
-
 }
-function formatItems(items) {
 
-    let output = "";
+db.collection("bookings")
+  .orderBy("timestamp", "desc")
+  .onSnapshot((snapshot) => {
 
-    for (let key in items) {
+      bookings = [];
 
-        if (items[key].qty > 0) {
+      snapshot.forEach((doc) => {
+          bookings.push(doc.data());
+      });
 
-            output +=
-                items[key].name +
-                " × " +
-                items[key].qty +
-                "<br>";
+      renderRiderTable();
 
-        }
-
-    }
-
-    return output;
-}
-bookings
-    .sort((a, b) => b.bookingId.localeCompare(a.bookingId))
-    .forEach((booking, index) => {    table.innerHTML += `
-        <tr>
-            <td>${booking.bookingId}</td>
-            <td>${booking.name}</td>
-            <td>${booking.phone}</td>
-            <td>${booking.address}</td>
-
-<td>${formatItems(booking.items || {})}</td>
-
-<td>${booking.date || "-"}</td>
-<td>${booking.time || "-"}</td>
-<td>${booking.status}</td>
-
-<td>
-    ₹${booking.totalAmount || 0}
-</td>
-
-<td>
-    <a href="tel:${booking.phone}">
-                    📞 Call
-                </a>
-            </td>
-
-            <td>
-                <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(booking.address)}" target="_blank">
-                    📍 Open Map
-                </a>
-            </td>
-
-            <td>
-                <button onclick="updateStatus(${index}, 'Picked Up')">
-                    🚚 Picked Up
-                </button>
-
-                <button onclick="updateStatus(${index}, 'Delivered')">
-                    📦 Delivered
-                </button>
-            </td>
-
-        </tr>
-    `;
-
-});
-setInterval(() => {
-
-    let updatedBookings =
-        JSON.parse(localStorage.getItem("vashBookings")) || [];
-
-    // Only reload UI if data changed
-    if (JSON.stringify(updatedBookings) !== JSON.stringify(bookings)) {
-
-        bookings = updatedBookings;
-
-        // refresh UI
-        location.reload(); // simple version (we can optimize later)
-
-    }
-
-}, 3000); // every 3 seconds
-
+  });
 </script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>

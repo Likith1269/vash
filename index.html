@@ -244,19 +244,21 @@ function loadServiceItems() {
 <h4>${getItemEmoji(item.id)} ${item.name}</h4>
                 <p>₹${item.price}</p>
 
-                <button type="button"
-                onclick="changeQty('${item.id}', -1)">
-                -
-                </button>
+               <span id="${item.id}">
+    0
+</span>
 
-                <span id="${item.id}">
-                    0
-                </span>
+<div class="qty-buttons">
+    <button type="button"
+    onclick="changeQty('${item.id}', -1)">
+        -
+    </button>
 
-                <button type="button"
-                onclick="changeQty('${item.id}', 1)">
-                +
-                </button>
+    <button type="button"
+    onclick="changeQty('${item.id}', 1)">
+        +
+    </button>
+
 
             </div>
         `;

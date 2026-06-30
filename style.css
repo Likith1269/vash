@@ -1214,3 +1214,145 @@ th, td {
     margin-top: 0 !important;
     margin-bottom: 8px !important;
 }
+/* MOBILE ITEM CARD ALIGNMENT FIX */
+
+@media screen and (max-width: 768px) {
+
+    .item-card {
+        min-height: 190px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .item-card h4 {
+        min-height: 45px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .item-card p {
+        margin: 0;
+        font-size: 16px;
+    }
+
+    .item-card span {
+        font-size: 24px;
+        font-weight: 700;
+        margin: 5px 0;
+        display: block;
+    }
+
+    .item-card button {
+        width: 44px;
+        height: 44px;
+        margin: 3px;
+    }
+
+    .item-card button:first-of-type,
+    .item-card button:last-of-type {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+.qty-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+}
+/* MOBILE ADMIN / RIDER TABLE CARD VIEW */
+
+@media screen and (max-width: 768px) {
+
+    .booking-card {
+        padding: 15px !important;
+        overflow-x: hidden !important;
+    }
+
+    table {
+        min-width: 100% !important;
+        width: 100% !important;
+        border: none !important;
+    }
+
+    thead {
+        display: none;
+    }
+
+    tbody,
+    tr,
+    td {
+        display: block;
+        width: 100%;
+    }
+
+    tr {
+        background: rgba(255,255,255,0.95);
+        margin-bottom: 18px;
+        padding: 15px;
+        border-radius: 18px;
+        box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+        border: 1px solid #dbeafe;
+        box-sizing: border-box;
+    }
+
+    td {
+        text-align: left !important;
+        padding: 8px 5px !important;
+        border: none !important;
+        font-size: 14px !important;
+        word-break: break-word;
+    }
+
+    td::before {
+        font-weight: bold;
+        color: #0077ff;
+        display: block;
+        margin-bottom: 4px;
+    }
+
+    td:nth-child(1)::before { content: "Booking ID"; }
+    td:nth-child(2)::before { content: "Customer"; }
+    td:nth-child(3)::before { content: "Phone"; }
+    td:nth-child(4)::before { content: "Service"; }
+    td:nth-child(5)::before { content: "Items"; }
+    td:nth-child(6)::before { content: "Address"; }
+    td:nth-child(7)::before { content: "Location"; }
+    td:nth-child(8)::before { content: "Date"; }
+    td:nth-child(9)::before { content: "Time"; }
+    td:nth-child(10)::before { content: "Amount"; }
+    td:nth-child(11)::before { content: "Status"; }
+    td:nth-child(12)::before { content: "Action"; }
+
+    td button,
+    td select,
+    td input {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-top: 8px !important;
+    }
+}
+/* RIDER MOBILE CARD LABEL FIX */
+
+@media screen and (max-width: 768px) {
+
+    .rider-body td:nth-child(1)::before { content: "Booking ID"; }
+    .rider-body td:nth-child(2)::before { content: "Customer"; }
+    .rider-body td:nth-child(3)::before { content: "Phone"; }
+    .rider-body td:nth-child(4)::before { content: "Address"; }
+    .rider-body td:nth-child(5)::before { content: "Items"; }
+    .rider-body td:nth-child(6)::before { content: "Date"; }
+    .rider-body td:nth-child(7)::before { content: "Time"; }
+    .rider-body td:nth-child(8)::before { content: "Status"; }
+    .rider-body td:nth-child(9)::before { content: "Amount"; }
+    .rider-body td:nth-child(10)::before { content: "Call"; }
+    .rider-body td:nth-child(11)::before { content: "Location"; }
+    .rider-body td:nth-child(12)::before { content: "Action"; }
+
+}
