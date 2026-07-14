@@ -385,7 +385,9 @@ function showMessage(event) {
             alert("Booking Confirmed: " + booking.bookingId);
 
             document.querySelector("form").reset();
-
+document.getElementById("menuBox").addEventListener("click", function(event) {
+    event.stopPropagation();
+});
             loadServiceItems();
             calculateTotal();
             loadOrders();
@@ -506,8 +508,9 @@ function resetMenuContent() {
         <button onclick="showHistory()">📦 Order History</button>
         <br><br>
 
-        <button onclick="showProfile()">👤 My Profile</button>
-        <br><br>
+<button type="button" onclick="showProfile(event)">
+    👤 My Profile
+</button>        <br><br>
 
         <button onclick="openWhatsApp()"
         style="background-color:#25D366;color:white;">
@@ -648,8 +651,64 @@ function closeMenu() {
     resetMenuContent();
 
 }
-function showProfile() {
+function showProfile(event) {
 
+    if (event) {
+        event.stopPropagation();
+    }
+
+    let menu = document.getElementById("menuBox");
+
+    menu.style.display = "block";
+
+    menu.innerHTML = `
+        <h3>My Profile</h3>
+
+        <input type="text"
+               id="editName"
+               value="${userData?.name || ""}"
+               placeholder="Name">
+
+        <br><br>
+
+        <input type="text"
+               id="editPhone"
+               value="${userData?.phone || ""}"
+               placeholder="Phone Number">
+
+        <br><br>
+
+        <input type="text"
+               id="editPincode"
+               value="${userData?.pincode || ""}"
+               placeholder="PIN Code">
+
+        <br><br>
+
+        <input type="text"
+               id="editAddress"
+               value="${userData?.address || ""}"
+               placeholder="Address">
+
+        <br><br>
+
+        <button type="button" onclick="updateProfileLocation(event)">
+            📍 Update Current Location
+        </button>
+
+        <br><br>
+
+        <button type="button" onclick="saveProfile(event)">
+            Save Changes
+        </button>
+
+        <br><br>
+
+        <button type="button" onclick="closeMenu()">
+            Close
+        </button>
+    `;
+}
     let menu =
         document.getElementById("menuBox");
 
@@ -685,7 +744,7 @@ function showProfile() {
         </button>
     `;
 
-}
+
 function saveProfile() {
 
     userData.name =
